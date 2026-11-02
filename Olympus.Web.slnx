@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Olympus.Core/Olympus.Core.csproj" />
+  <Project Path="Olympus.Data/Olympus.Data.csproj" />
+  <Project Path="Olympus.Web/Olympus.Web.csproj" />
+</Solution>
