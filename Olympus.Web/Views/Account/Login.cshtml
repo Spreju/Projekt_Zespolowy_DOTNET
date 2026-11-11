@@ -6,34 +6,42 @@
 }
 
 <h2>Zaloguj się do OLYMPUS</h2>
+
 <form asp-controller="Account"
       asp-action="Login"
       method="post">
 
-      @Html.AntiForgeryToken()
+    <input type="hidden"
+           name="returnUrl"
+           value="@ViewData["ReturnUrl"]" />
 
     <div asp-validation-summary="ModelOnly"
          class="text-danger"></div>
 
     <div class="mb-3">
         <label asp-for="Email" class="form-label"></label>
-        <input asp-for="Email" class="form-control" />
+
+        <input asp-for="Email"
+               class="form-control" />
+
         <span asp-validation-for="Email"
               class="text-danger"></span>
     </div>
 
     <div class="mb-3">
         <label asp-for="Password" class="form-label"></label>
+
         <input asp-for="Password"
-               type="password"
                class="form-control" />
+
         <span asp-validation-for="Password"
               class="text-danger"></span>
     </div>
 
-    <div class="mb-3 form-check">
+    <div class="form-check mb-3">
         <input asp-for="RememberMe"
                class="form-check-input" />
+
         <label asp-for="RememberMe"
                class="form-check-label"></label>
     </div>
@@ -42,3 +50,7 @@
         Zaloguj się
     </button>
 </form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

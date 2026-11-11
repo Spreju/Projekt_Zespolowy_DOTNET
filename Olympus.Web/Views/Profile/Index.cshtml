@@ -1,0 +1,39 @@
+@model Olympus.Web.ViewModels.ProfileViewModel
+
+@{
+    ViewData["Title"] = "Mój profil";
+}
+
+<h1>Mój profil OLYMPUS</h1>
+
+<p>Witaj na swojej stronie profilu!</p>
+
+<hr />
+
+<h3>Informacje o użytkowniku</h3>
+
+<p>
+    <strong>Nazwa użytkownika:</strong>
+    @Model.DisplayName
+</p>
+
+<p>
+    <strong>Adres e-mail:</strong>
+    @Model.Email
+</p>
+
+<h3>Twoje role</h3>
+
+@if (Model.Roles.Any())
+{
+    <ul>
+        @foreach (var role in Model.Roles)
+        {
+            <li>@role</li>
+        }
+    </ul>
+}
+else
+{
+    <p>Nie przypisano żadnych ról.</p>
+}
