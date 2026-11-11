@@ -364,3 +364,15 @@ FodyWeavers.xsd
 
 # macOS
 .DS_Store
+
+# Pliki z hasłami i kluczami API
+.env
+*.env
+
+# Lokalne nadpisania konfiguracji
+appsettings.Local.json
+
+# Bazy SQLite
+*.db
+*.sqlite
+*.sqlite3
