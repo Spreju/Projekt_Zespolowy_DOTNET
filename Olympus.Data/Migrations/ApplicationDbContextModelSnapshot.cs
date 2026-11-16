@@ -288,28 +288,52 @@ namespace Olympus.Data.Migrations
                     b.Property<int>("BogId")
                         .HasColumnType("integer");
 
+                    b.Property<DateTime?>("DataRozpatrzenia")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("DataZlozenia")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("OdpowiedzBoga")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
                     b.Property<string>("Ofiara")
-                        .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<int>("SmiertelnikId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<string>("Tresc")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("ZalacznikNazwaOryginalna")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("ZalacznikNazwaPliku")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("ZalacznikTyp")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BogId");
-
                     b.HasIndex("SmiertelnikId");
 
-                    b.ToTable("Modlitwa");
+                    b.HasIndex("BogId", "Status");
+
+                    b.ToTable("Modlitwy");
                 });
 
             modelBuilder.Entity("Olympus.Core.Entities.Smiertelnik", b =>
@@ -322,14 +346,21 @@ namespace Olympus.Data.Migrations
 
                     b.Property<string>("Imie")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<int>("PoziomPoboznosci")
                         .HasColumnType("integer");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Smiertelnik");
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Smiertelnicy");
                 });
 
             modelBuilder.Entity("Olympus.Data.Identity.ApplicationUser", b =>
@@ -502,7 +533,7 @@ namespace Olympus.Data.Migrations
                     b.HasOne("Olympus.Core.Entities.Bog", "Bog")
                         .WithMany("Modlitwy")
                         .HasForeignKey("BogId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Olympus.Core.Entities.Smiertelnik", "Smiertelnik")
@@ -514,6 +545,14 @@ namespace Olympus.Data.Migrations
                     b.Navigation("Bog");
 
                     b.Navigation("Smiertelnik");
+                });
+
+            modelBuilder.Entity("Olympus.Core.Entities.Smiertelnik", b =>
+                {
+                    b.HasOne("Olympus.Data.Identity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.SetNull);
                 });
 
             modelBuilder.Entity("Olympus.Core.Entities.Bog", b =>
