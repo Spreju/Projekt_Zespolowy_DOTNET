@@ -2,7 +2,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Olympus.Data.Data;
+using Olympus.Core.Interfaces;
 using Olympus.Data.Identity;
+using Olympus.Data.Services;
+using Olympus.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,9 +36,31 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 
+// Serwisy aplikacji (Dependency Injection)
+builder.Services.AddSingleton<IPlikiService, LocalPlikiService>();
+builder.Services.AddScoped<IModlitwaService, ModlitwaService>();
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+
+// Role oraz bóstwa startowe (operacje idempotentne)
+using (var scope = app.Services.CreateScope())
+{
+    try
+    {
+        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+        await RoleSeeder.SeedRoleAsync(roleManager);
+
+        var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        await OlympusDataSeeder.SeedBogowieAsync(db);
+    }
+    catch (Exception ex)
+    {
+        app.Logger.LogWarning(ex,
+            "Nie udało się zasiać danych startowych. Czy zastosowano migracje (dotnet ef database update)?");
+    }
+}
 
 
 if (!app.Environment.IsDevelopment())

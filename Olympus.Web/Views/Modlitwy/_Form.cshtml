@@ -1,0 +1,44 @@
+@model Olympus.Web.ViewModels.ModlitwaFormViewModel
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+<input type="hidden" asp-for="Id" />
+
+<div class="mb-3">
+    <label asp-for="BogId" class="form-label"></label>
+    <select asp-for="BogId" asp-items="Model.Bogowie" class="form-select">
+        <option value="">— wybierz bóstwo —</option>
+    </select>
+    <span asp-validation-for="BogId" class="text-danger"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Tresc" class="form-label"></label>
+    <textarea asp-for="Tresc" class="form-control" rows="5" maxlength="2000"></textarea>
+    <span asp-validation-for="Tresc" class="text-danger"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Ofiara" class="form-label"></label>
+    <input asp-for="Ofiara" class="form-control" maxlength="200" placeholder="np. kosz winogron i miód" />
+    <span asp-validation-for="Ofiara" class="text-danger"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Zalacznik" class="form-label"></label>
+    <input asp-for="Zalacznik" type="file" class="form-control" accept=".jpg,.jpeg,.png,.gif,.webp" />
+    <div class="form-text">JPG, PNG, GIF lub WEBP, maksymalnie 5 MB.</div>
+    <span asp-validation-for="Zalacznik" class="text-danger"></span>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.ObecnyZalacznik))
+{
+    <div class="mb-3">
+        <p class="mb-1">Obecne zdjęcie: <strong>@Model.ObecnyZalacznik</strong></p>
+        <div class="form-check">
+            <input asp-for="UsunZalacznik" class="form-check-input" />
+            <label asp-for="UsunZalacznik" class="form-check-label"></label>
+        </div>
+        <div class="form-text">Wybranie nowego pliku powyżej zastąpi obecne zdjęcie.</div>
+    </div>
+}

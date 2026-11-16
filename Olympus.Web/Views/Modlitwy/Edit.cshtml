@@ -1,0 +1,23 @@
+@model Olympus.Web.ViewModels.ModlitwaFormViewModel
+
+@{
+    ViewData["Title"] = "Edytuj modlitwę";
+}
+
+<h1 class="h2">Edytuj modlitwę</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-7">
+        <form asp-action="Edit" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data">
+            <partial name="_Form" model="Model" />
+
+            <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+            <a asp-action="Index" class="btn btn-link">Anuluj</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

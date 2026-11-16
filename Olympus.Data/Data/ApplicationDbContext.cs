@@ -15,6 +15,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Heros> Herosi => Set<Heros>();
     public DbSet<Misja> Misje => Set<Misja>();
     public DbSet<MisjaHeros> MisjeHerosow => Set<MisjaHeros>();
+    public DbSet<Smiertelnik> Smiertelnicy => Set<Smiertelnik>();
+    public DbSet<Modlitwa> Modlitwy => Set<Modlitwa>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

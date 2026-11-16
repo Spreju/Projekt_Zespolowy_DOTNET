@@ -1,0 +1,17 @@
+@model Olympus.Core.Entities.StatusModlitwy
+
+@switch (Model)
+{
+    case Olympus.Core.Entities.StatusModlitwy.Zaakceptowana:
+        <span class="badge bg-success">Zaakceptowana</span>
+        break;
+    case Olympus.Core.Entities.StatusModlitwy.Odrzucona:
+        <span class="badge bg-secondary">Odrzucona</span>
+        break;
+    case Olympus.Core.Entities.StatusModlitwy.Ukarana:
+        <span class="badge bg-danger">Ukarana</span>
+        break;
+    default:
+        <span class="badge bg-warning text-dark">Oczekująca</span>
+        break;
+}

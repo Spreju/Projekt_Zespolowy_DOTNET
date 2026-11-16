@@ -1,0 +1,24 @@
+@model Olympus.Core.Entities.Modlitwa
+
+@{
+    ViewData["Title"] = "Usuń modlitwę";
+}
+
+<h1 class="h2">Usunąć modlitwę?</h1>
+<p class="text-danger">Tej operacji nie można cofnąć.</p>
+
+<dl class="row">
+    <dt class="col-sm-3">Bóstwo</dt>
+    <dd class="col-sm-9">@Model.Bog.Imie</dd>
+
+    <dt class="col-sm-3">Modlitwa</dt>
+    <dd class="col-sm-9">@Model.Tresc</dd>
+
+    <dt class="col-sm-3">Ofiara</dt>
+    <dd class="col-sm-9">@(Model.Ofiara ?? "—")</dd>
+</dl>
+
+<form asp-action="Delete" asp-route-id="@Model.Id" method="post">
+    <button type="submit" class="btn btn-danger">Usuń</button>
+    <a asp-action="Index" class="btn btn-link">Anuluj</a>
+</form>
