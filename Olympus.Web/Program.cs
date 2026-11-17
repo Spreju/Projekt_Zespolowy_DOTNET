@@ -1,4 +1,4 @@
-
+using Olympus.Web.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Olympus.Data.Data;
@@ -34,6 +34,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddTransient<IPasswordResetEmailSender,SmtpPasswordResetEmailSender>();
 
 var app = builder.Build();
 
