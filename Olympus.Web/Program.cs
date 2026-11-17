@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Olympus.Data.Data;
 using Olympus.Data.Identity;
+using Olympus.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +35,12 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 
 builder.Services.AddControllersWithViews();
+
+// Moduł Wyroczni – integracja z zewnętrznym API pogodowym (Open-Meteo)
+builder.Services.AddHttpClient<IOracleService, OracleService>(client =>
+{
+    client.Timeout = TimeSpan.FromSeconds(10);
+});
 
 var app = builder.Build();
 

@@ -62,6 +62,17 @@
                                 Prywatność
                             </a>
                         </li>
+
+                        @if (User.IsInRole("Oracle") || User.IsInRole("God") || User.IsInRole("Zeus"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark"
+                                   asp-controller="Oracle"
+                                   asp-action="Index">
+                                    Wyrocznia
+                                </a>
+                            </li>
+                        }
                     </ul>
 
                     <ul class="navbar-nav">

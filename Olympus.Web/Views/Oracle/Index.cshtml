@@ -1,0 +1,74 @@
+@model Olympus.Web.ViewModels.OracleViewModel
+
+@{
+    ViewData["Title"] = "Wyrocznia";
+}
+
+<h1>Wyrocznia Delficka</h1>
+<p>Zapytaj Wyrocznię o krainę śmiertelników. Wyrocznia odczyta prawdziwe znaki z nieba
+   (aktualną pogodę) i oceni <strong>Równowagę Świata</strong>.</p>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-5">
+        <form asp-controller="Oracle" asp-action="Index" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="City" class="form-label"></label>
+                <input asp-for="City" class="form-control" placeholder="np. Białystok, Ateny" />
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Zapytaj Wyrocznię</button>
+        </form>
+    </div>
+</div>
+
+@if (Model.Reading != null)
+{
+    var r = Model.Reading;
+    var barClass = r.WorldBalance >= 60 ? "bg-success" : r.WorldBalance >= 40 ? "bg-warning" : "bg-danger";
+    var place = string.IsNullOrEmpty(r.Country) ? r.City : $"{r.City} ({r.Country})";
+
+    <hr />
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+
+    <h3>Kraina: @place</h3>
+
+    <h4>Równowaga Świata: @r.WorldBalance / 100 – @r.BalanceLevel</h4>
+    <div class="progress mb-3" style="height: 25px;">
+        <div class="progress-bar @barClass" role="progressbar"
+             style="width: @(r.WorldBalance)%;"
+             aria-valuenow="@r.WorldBalance" aria-valuemin="0" aria-valuemax="100">
+            @r.WorldBalance%
+        </div>
+    </div>
+
+    <table class="table table-bordered w-auto">
+        <tr><th>Zjawisko</th><td>@r.WeatherDescription</td></tr>
+        <tr><th>Temperatura</th><td>@r.Temperature °C</td></tr>
+        <tr><th>Wiatr</th><td>@r.WindSpeed km/h</td></tr>
+        <tr><th>Opady</th><td>@r.Precipitation mm</td></tr>
+        <tr><th>Czas odczytu</th><td>@r.ReadAt.ToString("dd.MM.yyyy HH:mm")</td></tr>
+    </table>
+
+    <div class="card mb-3">
+        <div class="card-header">Przepowiednia</div>
+        <div class="card-body"><em>„@r.Prophecy”</em></div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">Rekomendacja dla bogów</div>
+        <div class="card-body">@r.Recommendation</div>
+    </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
