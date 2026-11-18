@@ -1,4 +1,5 @@
-
+using Olympus.Web.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Olympus.Data.Identity;
@@ -11,10 +12,12 @@ public class AccountController : Controller
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
-    public AccountController(UserManager<ApplicationUser> userManager,SignInManager<ApplicationUser>signInManager)
+    private readonly IPasswordResetEmailSender _emailSender;
+    public AccountController(UserManager<ApplicationUser> userManager,SignInManager<ApplicationUser>signInManager,IPasswordResetEmailSender emailSender)
     {
         _userManager = userManager;
         _signInManager = signInManager;
+        _emailSender = emailSender;
     }
     [HttpGet]
     
@@ -49,12 +52,93 @@ public class AccountController : Controller
         return View(model);
     }
     [HttpGet]
+    [AllowAnonymous]
+    public IActionResult ForgotPassword()
+    {
+        return View(new ForgotPasswordViewModel());
+    }
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult ForgotPasswordConfirmation()
+    {
+        return View();
+    }
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult ResetPassword(string? email, string? token)
+    {
+        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
+        {
+            return BadRequest("Link do resetowania hasła jest nieprawidłowy.");
+        }
+        var model  = new ResetPasswordViewModel
+        {
+            Email = email,
+            Token = token
+        };
+        return View(model);
+    }
+    [HttpPost]
+    [AllowAnonymous]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+    {
+        if(!ModelState.IsValid)
+        {
+            return View(model);
+        }
+        var user = await _userManager.FindByEmailAsync(model.Email);
+        if(user == null)
+        {
+            ModelState.AddModelError(string.Empty,"Nie udało się zresetować hasła. Link może być nieprawidłowy lub wygasły.");
+            return View(model);
+        }
+        var result = await _userManager.ResetPasswordAsync(user,model.Token, model.Password);
+        if (result.Succeeded)
+        {
+            return RedirectToAction(nameof(ResetPasswordConfirmation));
+        }
+        ModelState.AddModelError(string.Empty, "Nie udało się zresetować hasła. Sprawdź poprawność linku i wymagania dotyczące hasła.");
+        return View(model);
+    }
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult ResetPasswordConfirmation()
+    {
+        return View();
+    }
+    [HttpPost]
+    [AllowAnonymous]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+    {
+        if(!ModelState.IsValid)
+        {
+            return View(model);
+        }
+        var user = await _userManager.FindByEmailAsync(model.Email);
+        if (user == null)
+        {
+            return RedirectToAction(nameof(ForgotPasswordConfirmation));
+        } 
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        var resetLink = Url.Action(action: "ResetPassword",controller: "Account",values: new { email = user.Email,token = token}, protocol: Request.Scheme);
+        if (string.IsNullOrEmpty(resetLink))
+        {
+            throw new InvalidOperationException("Nie udało się wygenerować linku resetowania hasła.");
+        }
+        await _emailSender.SendPasswordResetLinkAsync(user.Email!,resetLink);
+        return RedirectToAction(nameof(ForgotPasswordConfirmation));
+    }
+    [HttpGet]
     public IActionResult Register()
     {
         return View(new RegisterViewModel());
     }
     [HttpPost]
     [ValidateAntiForgeryToken]
+
+    
     public async Task<IActionResult> Register(RegisterViewModel model)
     {
         if (!ModelState.IsValid)

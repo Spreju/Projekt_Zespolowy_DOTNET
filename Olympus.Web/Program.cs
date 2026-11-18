@@ -1,4 +1,4 @@
-
+using Olympus.Web.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Olympus.Data.Data;
@@ -41,6 +41,7 @@ builder.Services.AddSingleton<IPlikiService, LocalPlikiService>();
 builder.Services.AddScoped<IModlitwaService, ModlitwaService>();
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddTransient<IPasswordResetEmailSender,SmtpPasswordResetEmailSender>();
 
 var app = builder.Build();
 
