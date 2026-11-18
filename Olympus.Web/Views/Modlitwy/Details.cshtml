@@ -1,0 +1,94 @@
+@using Olympus.Core.Entities
+@model Olympus.Web.ViewModels.ModlitwaDetailsViewModel
+
+@{
+    ViewData["Title"] = "Szczegóły modlitwy";
+    var m = Model.Modlitwa;
+    var powrot = Model.JestWlascicielem ? "Index" : "Skrzynka";
+}
+
+<h1 class="h2">Modlitwa do: @m.Bog.Imie</h1>
+
+<partial name="_Komunikaty" />
+
+<dl class="row">
+    <dt class="col-sm-3">Status</dt>
+    <dd class="col-sm-9"><partial name="_StatusBadge" model="m.Status" /></dd>
+
+    <dt class="col-sm-3">Śmiertelnik</dt>
+    <dd class="col-sm-9">@m.Smiertelnik.Imie (pobożność: @m.Smiertelnik.PoziomPoboznosci)</dd>
+
+    <dt class="col-sm-3">Złożona</dt>
+    <dd class="col-sm-9">@m.DataZlozenia.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</dd>
+
+    <dt class="col-sm-3">Treść</dt>
+    <dd class="col-sm-9" style="white-space: pre-wrap">@m.Tresc</dd>
+
+    <dt class="col-sm-3">Ofiara</dt>
+    <dd class="col-sm-9">@(m.Ofiara ?? "—")</dd>
+
+    @if (m.ZalacznikNazwaPliku != null)
+    {
+        <dt class="col-sm-3">Zdjęcie ofiary</dt>
+        <dd class="col-sm-9">
+            <a asp-action="Zalacznik" asp-route-id="@m.Id" target="_blank">
+                <img src="@Url.Action("Zalacznik", new { id = m.Id })"
+                     alt="@m.ZalacznikNazwaOryginalna"
+                     class="img-thumbnail"
+                     style="max-width: 320px" />
+            </a>
+            <div class="form-text">@m.ZalacznikNazwaOryginalna</div>
+        </dd>
+    }
+
+    @if (m.Status != StatusModlitwy.Oczekujaca)
+    {
+        <dt class="col-sm-3">Rozpatrzona</dt>
+        <dd class="col-sm-9">@(m.DataRozpatrzenia?.ToLocalTime().ToString("dd.MM.yyyy HH:mm"))</dd>
+
+        <dt class="col-sm-3">Odpowiedź boga</dt>
+        <dd class="col-sm-9" style="white-space: pre-wrap">@(m.OdpowiedzBoga ?? "Bóg nie dodał komentarza.")</dd>
+    }
+</dl>
+
+@if (Model.MozeRozpatrywac)
+{
+    <div class="card mb-3">
+        <div class="card-body">
+            <h2 class="h5">Twoja decyzja</h2>
+            <form asp-action="Rozpatrz" method="post">
+                <input type="hidden" name="Id" value="@m.Id" />
+
+                <div class="mb-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="Decyzja" id="d1" value="@((int)StatusModlitwy.Zaakceptowana)" />
+                        <label class="form-check-label" for="d1">Zaakceptuj (błogosławieństwo)</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="Decyzja" id="d2" value="@((int)StatusModlitwy.Odrzucona)" />
+                        <label class="form-check-label" for="d2">Odrzuć</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="Decyzja" id="d3" value="@((int)StatusModlitwy.Ukarana)" />
+                        <label class="form-check-label" for="d3">Ześlij karę (wymaga opisu)</label>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="OdpowiedzBoga" class="form-label">Odpowiedź / opis kary</label>
+                    <textarea class="form-control" id="OdpowiedzBoga" name="OdpowiedzBoga" rows="3" maxlength="1000"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Zapisz decyzję</button>
+            </form>
+        </div>
+    </div>
+}
+
+<div>
+    @if (Model.MozeEdytowac)
+    {
+        <a asp-action="Edit" asp-route-id="@m.Id" class="btn btn-outline-primary">Edytuj</a>
+    }
+    <a asp-action="@powrot" class="btn btn-link">Wróć do listy</a>
+</div>

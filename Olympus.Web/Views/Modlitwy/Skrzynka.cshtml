@@ -1,0 +1,54 @@
+@using Olympus.Core.Entities
+@model IReadOnlyList<Modlitwa>
+
+@{
+    ViewData["Title"] = "Skrzynka modlitw";
+    var oczekujace = Model.Count(m => m.Status == StatusModlitwy.Oczekujaca);
+}
+
+<h1 class="h2">Skrzynka modlitw</h1>
+<p class="text-muted">Oczekujące na rozpatrzenie: <strong>@oczekujace</strong></p>
+
+<partial name="_Komunikaty" />
+
+@if (!Model.Any())
+{
+    <p class="text-muted">
+        Brak modlitw do wyświetlenia. Jeśli jesteś bogiem, upewnij się, że Twoje konto
+        jest powiązane z bóstwem (tabela <code>Bogowie</code>, kolumna <code>UserId</code>).
+    </p>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Śmiertelnik</th>
+                    <th>Bóstwo</th>
+                    <th>Modlitwa</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var m in Model)
+                {
+                    <tr>
+                        <td>@m.DataZlozenia.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+                        <td>@m.Smiertelnik.Imie</td>
+                        <td>@m.Bog.Imie</td>
+                        <td>@(m.Tresc.Length > 60 ? m.Tresc[..60] + "…" : m.Tresc)</td>
+                        <td><partial name="_StatusBadge" model="m.Status" /></td>
+                        <td class="text-end">
+                            <a asp-action="Details" asp-route-id="@m.Id" class="btn btn-sm btn-outline-primary">
+                                @(m.Status == StatusModlitwy.Oczekujaca ? "Rozpatrz" : "Szczegóły")
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

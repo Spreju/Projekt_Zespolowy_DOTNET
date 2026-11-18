@@ -1,0 +1,60 @@
+@model IReadOnlyList<Olympus.Core.Entities.Modlitwa>
+
+@{
+    ViewData["Title"] = "Moje modlitwy";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h2 mb-0">Moje modlitwy</h1>
+    <a asp-action="Create" class="btn btn-primary">Złóż modlitwę</a>
+</div>
+
+<partial name="_Komunikaty" />
+
+@if (!Model.Any())
+{
+    <p class="text-muted">Nie złożyłeś jeszcze żadnej modlitwy. Bogowie czekają na Twój głos.</p>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Bóstwo</th>
+                    <th>Modlitwa</th>
+                    <th>Ofiara</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var m in Model)
+                {
+                    <tr>
+                        <td>@m.DataZlozenia.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+                        <td>@m.Bog.Imie</td>
+                        <td>@(m.Tresc.Length > 60 ? m.Tresc[..60] + "…" : m.Tresc)</td>
+                        <td>
+                            @(m.Ofiara ?? "—")
+                            @if (m.ZalacznikNazwaPliku != null)
+                            {
+                                <span title="Dołączono zdjęcie">📎</span>
+                            }
+                        </td>
+                        <td><partial name="_StatusBadge" model="m.Status" /></td>
+                        <td class="text-end">
+                            <a asp-action="Details" asp-route-id="@m.Id" class="btn btn-sm btn-outline-secondary">Szczegóły</a>
+                            @if (m.Status == Olympus.Core.Entities.StatusModlitwy.Oczekujaca)
+                            {
+                                <a asp-action="Edit" asp-route-id="@m.Id" class="btn btn-sm btn-outline-primary">Edytuj</a>
+                                <a asp-action="Delete" asp-route-id="@m.Id" class="btn btn-sm btn-outline-danger">Usuń</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

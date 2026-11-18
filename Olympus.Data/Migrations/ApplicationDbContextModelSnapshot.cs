@@ -154,6 +154,215 @@ namespace Olympus.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Olympus.Core.Entities.Bog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Domena")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Imie")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Bogowie");
+                });
+
+            modelBuilder.Entity("Olympus.Core.Entities.Heros", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Imie")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Herosi");
+                });
+
+            modelBuilder.Entity("Olympus.Core.Entities.Misja", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BogId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("DataUtworzenia")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Opis")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<int>("PoziomTrudnosci")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<DateOnly?>("Termin")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Tytul")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BogId");
+
+                    b.ToTable("Misje");
+                });
+
+            modelBuilder.Entity("Olympus.Core.Entities.MisjaHeros", b =>
+                {
+                    b.Property<int>("MisjaId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("HerosId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("DataPrzyjecia")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DataWykonania")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Raport")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.HasKey("MisjaId", "HerosId");
+
+                    b.HasIndex("HerosId");
+
+                    b.ToTable("MisjeHerosow");
+                });
+
+            modelBuilder.Entity("Olympus.Core.Entities.Modlitwa", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BogId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("DataRozpatrzenia")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("DataZlozenia")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("OdpowiedzBoga")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<string>("Ofiara")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<int>("SmiertelnikId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("Tresc")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("ZalacznikNazwaOryginalna")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("ZalacznikNazwaPliku")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("ZalacznikTyp")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SmiertelnikId");
+
+                    b.HasIndex("BogId", "Status");
+
+                    b.ToTable("Modlitwy");
+                });
+
+            modelBuilder.Entity("Olympus.Core.Entities.Smiertelnik", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Imie")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("PoziomPoboznosci")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Smiertelnicy");
+                });
+
             modelBuilder.Entity("Olympus.Data.Identity.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -271,6 +480,101 @@ namespace Olympus.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Olympus.Core.Entities.Bog", b =>
+                {
+                    b.HasOne("Olympus.Data.Identity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.SetNull);
+                });
+
+            modelBuilder.Entity("Olympus.Core.Entities.Heros", b =>
+                {
+                    b.HasOne("Olympus.Data.Identity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.SetNull);
+                });
+
+            modelBuilder.Entity("Olympus.Core.Entities.Misja", b =>
+                {
+                    b.HasOne("Olympus.Core.Entities.Bog", "Bog")
+                        .WithMany("Misje")
+                        .HasForeignKey("BogId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Bog");
+                });
+
+            modelBuilder.Entity("Olympus.Core.Entities.MisjaHeros", b =>
+                {
+                    b.HasOne("Olympus.Core.Entities.Heros", "Heros")
+                        .WithMany("Misje")
+                        .HasForeignKey("HerosId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Olympus.Core.Entities.Misja", "Misja")
+                        .WithMany("Herosi")
+                        .HasForeignKey("MisjaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Heros");
+
+                    b.Navigation("Misja");
+                });
+
+            modelBuilder.Entity("Olympus.Core.Entities.Modlitwa", b =>
+                {
+                    b.HasOne("Olympus.Core.Entities.Bog", "Bog")
+                        .WithMany("Modlitwy")
+                        .HasForeignKey("BogId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Olympus.Core.Entities.Smiertelnik", "Smiertelnik")
+                        .WithMany("Modlitwy")
+                        .HasForeignKey("SmiertelnikId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Bog");
+
+                    b.Navigation("Smiertelnik");
+                });
+
+            modelBuilder.Entity("Olympus.Core.Entities.Smiertelnik", b =>
+                {
+                    b.HasOne("Olympus.Data.Identity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.SetNull);
+                });
+
+            modelBuilder.Entity("Olympus.Core.Entities.Bog", b =>
+                {
+                    b.Navigation("Misje");
+
+                    b.Navigation("Modlitwy");
+                });
+
+            modelBuilder.Entity("Olympus.Core.Entities.Heros", b =>
+                {
+                    b.Navigation("Misje");
+                });
+
+            modelBuilder.Entity("Olympus.Core.Entities.Misja", b =>
+                {
+                    b.Navigation("Herosi");
+                });
+
+            modelBuilder.Entity("Olympus.Core.Entities.Smiertelnik", b =>
+                {
+                    b.Navigation("Modlitwy");
                 });
 #pragma warning restore 612, 618
         }
