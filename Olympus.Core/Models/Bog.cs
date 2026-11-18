@@ -12,5 +12,8 @@ namespace Olympus.Core.Entities
 
         // Relacja OneToMany: Jeden Bóg otrzymuje wiele modlitw
         public ICollection<Modlitwa> Modlitwy { get; set; } = new List<Modlitwa>();
+        
+        // Relacja OneToMany: Jeden Bóg może zlecić wiele interwencji
+        public ICollection<Interwencja> Interwencje { get; set; } = new List<Interwencja>();
     }
 }
