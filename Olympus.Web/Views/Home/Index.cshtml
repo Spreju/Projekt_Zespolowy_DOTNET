@@ -1,8 +1,51 @@
 ﻿@{
-    ViewData["Title"] = "TESTOWA";
+    ViewData["Title"] = "Strona główna";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="p-5 mb-4 bg-dark text-white rounded-3 text-center shadow">
+    <h1 class="display-4 fw-bold text-warning">OLYMPUS</h1>
+    <p class="lead mb-4">
+        System zarządzania modlitwami, ofiarami oraz pobożnością śmiertelników.
+    </p>
+    <div class="d-flex justify-content-center gap-3">
+        <a asp-controller="Account" asp-action="Register" class="btn btn-warning btn-lg fw-semibold">
+            Zarejestruj się
+        </a>
+        <a asp-controller="Account" asp-action="Login" class="btn btn-outline-light btn-lg">
+            Zaloguj się
+        </a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title fw-bold">Śmiertelnicy</h5>
+                <p class="card-text text-muted">
+                    Zakładaj konto, rozwijaj swój poziom pobożności i składaj prośby do bóstw.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title fw-bold">Modlitwy i Ofiary</h5>
+                <p class="card-text text-muted">
+                    Przesyłaj modlitwy wraz z ofiarami i śledź status ich rozpatrzenia.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title fw-bold">Panteon Bogów</h5>
+                <p class="card-text text-muted">
+                    Zarządzanie domenami Olimpu oraz akceptowanie lub odrzucanie próśb śmiertelnych.
+                </p>
+            </div>
+        </div>
+    </div>
 </div>
